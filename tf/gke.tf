@@ -1,7 +1,3 @@
-provider "google" {
-  credentials = file("/path/to/cred.json")
-}
-
 module "gke_auth" {
   source       = "terraform-google-modules/kubernetes-engine/google//modules/auth"
   depends_on   = [module.gke]
