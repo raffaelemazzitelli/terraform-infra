@@ -1,5 +1,6 @@
 variable "project_id" {
   description = "The project ID of your project"
+  default = "rare-phoenix-413915"
 }
 variable "cluster_name" {
   description = "The name for the GKE cluster"
