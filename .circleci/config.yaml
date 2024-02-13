@@ -26,7 +26,7 @@ jobs:
         default: /home/circleci/oidc_token.json
       service_account_email:
         type: string
-        default: --------
+        default: ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com
       project_id:
         type: string
         default: rare-phoenix-413915
