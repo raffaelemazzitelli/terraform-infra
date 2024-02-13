@@ -1,18 +1,3 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
-variable "project_id" {
-  description = "project id"
-  default = "rare-phoenix-413915"
-
-}
-
-variable "region" {
-  description = "region"
-  default = "us-central1-f"
-}
-
-
 # VPC
 resource "google_compute_network" "vpc" {
   name                    = "${var.project_id}-vpc"
