@@ -18,12 +18,6 @@ jobs:
         description: Docker resoruce class
         type: string
         default: medium
-      gcp_cred_config_file_path:
-        type: string
-        default: /home/circleci/gcp_cred_config.json
-      oidc_token_file_path:
-        type: string
-        default: /home/circleci/oidc_token.json
       service_account_email:
         type: string
         default: ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com  
@@ -38,25 +32,25 @@ jobs:
           name: "Create OIDC credential configuration"
           command: |
             # Store OIDC token in temp file
-            oidc_token_file_path=
-            echo $CIRCLE_OIDC_TOKEN > << parameters.oidc_token_file_path >>
+            export oidc_token_file_path="/home/circleci/oidc_token.json"
+            export gcp_cred_config_file_path="/home/circleci/gcp_cred_config.json"
+            echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
             # Create a credential configuration for the generated OIDC ID Token
             gcloud iam workload-identity-pools create-cred-config \
                 "/projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
-                --output-file="<< parameters.gcp_cred_config_file_path >>" \
+                --output-file="$gcp_cred_config_file_path" \
                 --service-account="< parameters.service_account_email >>" \
-                --credential-source-file=<< parameters.oidc_token_file_path >>
-      - run:
-          name: "Authenticate with GCP using OIDC"
-          command: |
+                --credential-source-file=$oidc_token_file_path
+      
             # Configure gcloud to leverage the generated credential configuration
-            gcloud auth login --brief --cred-file "<< parameters.gcp_cred_config_file_path >>"
+            gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
             # Configure ADC
-            echo "export GOOGLE_APPLICATION_CREDENTIALS='<< parameters.gcp_cred_config_file_path >>'" | tee -a "$BASH_ENV"
-
+            echo "export GOOGLE_APPLICATION_CREDENTIALS='$gcp_cred_config_file_path'" | tee -a "$BASH_ENV"
+            gcloud auth list
       - run:
           name: Configure Docker to use Google Artifact Registry
           command: |
+            gcloud auth list
             gcloud auth configure-docker europe-west1-docker.pkg.dev
       - run:
           name: Build Docker Image
@@ -65,6 +59,7 @@ jobs:
       - run:
           name: Push Docker Image to Google Artifact Registry
           command: |
+            gcloud auth list
             docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:${CIRCLE_SHA1}
 workflows:
   build_on_main_push:
