@@ -79,7 +79,7 @@ jobs:
 workflows:
   build_on_main_push:
     jobs:
-      - build:
+     - docker-build:
           filters:
             branches:
               only: main
