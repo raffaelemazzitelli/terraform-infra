@@ -26,17 +26,7 @@ jobs:
         default: /home/circleci/oidc_token.json
       service_account_email:
         type: string
-        default: ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com
-      project_id:
-        type: string
-        default: "869209469704"
-      workload_identity_pool_id:
-        type: string
-        default: ci_ci
-      workload_identity_pool_provider_id:
-        type: string
-        default: circleci-oidc
-      
+        default: ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com  
     machine:
       image: <<pipeline.parameters.base_image>>
       resource_class: "<<parameters.resource_class>>"
@@ -52,7 +42,7 @@ jobs:
             echo $CIRCLE_OIDC_TOKEN > << parameters.oidc_token_file_path >>
             # Create a credential configuration for the generated OIDC ID Token
             gcloud iam workload-identity-pools create-cred-config \
-                "projects/<< parameters.project_id >>/locations/global/workloadIdentityPools/<< parameters.workload_identity_pool_id >>/providers/<< parameters.workload_identity_pool_provider_id >>"\
+                "/projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
                 --output-file="<< parameters.gcp_cred_config_file_path >>" \
                 --service-account="< parameters.service_account_email >>" \
                 --credential-source-file=<< parameters.oidc_token_file_path >>
