@@ -10,6 +10,5 @@ terraform {
 
 provider "google" {
   project = "rare-phoenix-413915"
-  region  = "us-central1"
-  zone    = "us-central1-c"
+  region  = "europe-west1"
 }

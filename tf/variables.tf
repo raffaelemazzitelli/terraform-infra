@@ -6,5 +6,9 @@ variable "project_id" {
 
 variable "region" {
   description = "region"
-  default = "us-central1"
+  default = "europe-west1"
+}
+
+data "google_project" "project" {
+  project_id = var.project_id
 }
