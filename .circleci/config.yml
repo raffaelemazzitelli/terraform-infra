@@ -29,7 +29,7 @@ jobs:
         default: ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com
       project_id:
         type: string
-        default: rare-phoenix-413915
+        default: "869209469704"
       workload_identity_pool_id:
         type: string
         default: ci_ci
