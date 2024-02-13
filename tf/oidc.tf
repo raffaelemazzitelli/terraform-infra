@@ -17,3 +17,14 @@ resource "google_iam_workload_identity_pool_provider" "ci_cd" {
   }
 }
 
+
+resource "google_service_account_iam_binding" "admin-account-iam" {
+  service_account_id = google_service_account.ci_cd_writer.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "principalSet://iam.googleapis.com/projects/869209469704/locations/global/workloadIdentityPools/ci-cd/*",
+  ]
+}
+
+
