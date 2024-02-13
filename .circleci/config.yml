@@ -76,3 +76,10 @@ jobs:
           name: Push Docker Image to Google Artifact Registry
           command: |
             docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:${CIRCLE_SHA1}
+workflows:
+  build_on_main_push:
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: main
