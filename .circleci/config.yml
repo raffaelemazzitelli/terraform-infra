@@ -36,17 +36,11 @@ jobs:
             echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
             # Create a credential configuration for the generated OIDC ID Token
             gcloud iam workload-identity-pools create-cred-config \
-                "//projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
+                "projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
                 --output-file="$gcp_cred_config_file_path" \
                 --service-account="$account_email" \
                 --credential-source-file=$oidc_token_file_path
-
-            # gcloud iam workload-identity-pools create-cred-config \
-            #     "/projects/rare-phoenix-413915/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
-            #     --output-file="$gcp_cred_config_file_path" \
-            #     --service-account="$account_email" \
-            #     --credential-source-file=$oidc_token_file_path
-      
+                
             # Configure gcloud to leverage the generated credential configuration
             gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
             # Configure ADC
