@@ -13,7 +13,7 @@ resource "google_artifact_registry_repository_iam_member" "member" {
   member = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
 }
 
-resource "google_artifact_registry_repository_iam_member" "member" {
+resource "google_artifact_registry_repository_iam_member" "ci_cd_writer" {
   project = google_artifact_registry_repository.my-repo.project
   location = google_artifact_registry_repository.my-repo.location
   repository = google_artifact_registry_repository.my-repo.name
