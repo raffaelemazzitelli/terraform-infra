@@ -10,7 +10,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(b'Hello, World!')
 
 def run_server():
-    httpd = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+    httpd = HTTPServer(('0.0.0.0', 80), SimpleHTTPRequestHandler)
     httpd.serve_forever()
 
 def shutdown_server_after_timeout(timeout):
@@ -19,6 +19,6 @@ def shutdown_server_after_timeout(timeout):
     exit()
 
 if __name__ == '__main__':
-    timeout_thread = threading.Thread(target=shutdown_server_after_timeout, args=(60,))
-    timeout_thread.start()
+    # timeout_thread = threading.Thread(target=shutdown_server_after_timeout, args=(60,))
+    # timeout_thread.start()
     run_server()
