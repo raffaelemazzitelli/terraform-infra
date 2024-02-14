@@ -16,7 +16,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             exit(1)
 
 def run_server():
-    PORT = 8080
+    PORT = 80
     with socketserver.TCPServer(("", PORT), MyHttpRequestHandler) as httpd:
         print("HTTP server running at port", PORT)
         httpd.serve_forever()

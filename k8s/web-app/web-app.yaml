@@ -4,7 +4,7 @@ metadata:
   name: webapp-deployment
   namespace: webapp  # Specify namespace here
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: webapp
