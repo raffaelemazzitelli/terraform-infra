@@ -1,24 +1,26 @@
-# server.py
-from http.server import HTTPServer, BaseHTTPRequestHandler
+import http.server
+import socketserver
 import threading
 import time
 
-class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
+class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b'Hello, World 4!')
+        self.wfile.write(b'I should go down in 60 sec!')
 
 def run_server():
-    httpd = HTTPServer(('0.0.0.0', 80), SimpleHTTPRequestHandler)
-    httpd.serve_forever()
+    PORT = 80
+    with socketserver.TCPServer(("", PORT), MyHttpRequestHandler) as httpd:
+        print("HTTP server running at port", PORT)
+        httpd.serve_forever()
 
-def shutdown_server_after_timeout(timeout):
-    time.sleep(timeout)
-    print("Shutting down server after 60 seconds.")
-    exit()
+# Start the HTTP server in a separate thread
+server_thread = threading.Thread(target=run_server)
+server_thread.start()
 
-if __name__ == '__main__':
-    timeout_thread = threading.Thread(target=shutdown_server_after_timeout, args=(60,))
-    timeout_thread.start()
-    run_server()
+# Run for 60 seconds
+time.sleep(60)
+
+# Stop the server
+server_thread.join()
