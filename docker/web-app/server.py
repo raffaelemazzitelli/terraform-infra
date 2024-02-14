@@ -3,24 +3,24 @@ import socketserver
 import threading
 import time
 
+number_of_left_requests=10
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
+        global number_of_left_requests
         self.send_response(200)
         self.end_headers()
-        self.wfile.write(b'I should go down in 60 sec!')
+        number_of_left_requests-=1
+
+        self.wfile.write(f'I should go down in {number_of_left_requests}'.encode('utf-8'))
+        if number_of_left_requests < 0:
+            exit(1)
 
 def run_server():
-    PORT = 80
+    PORT = 8080
     with socketserver.TCPServer(("", PORT), MyHttpRequestHandler) as httpd:
         print("HTTP server running at port", PORT)
         httpd.serve_forever()
 
-# Start the HTTP server in a separate thread
-server_thread = threading.Thread(target=run_server)
-server_thread.start()
 
-# Run for 60 seconds
-time.sleep(60)
-
-# Stop the server
-server_thread.join()
+if __name__ =="__main__":
+    run_server()
