@@ -20,10 +20,3 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
-        livenessProbe:
-          httpGet:
-            path: /healthz  # Change this to the endpoint that indicates the health of your application
-            port: 80      # Change this to the port on which your application listens
-          initialDelaySeconds: 2
-          periodSeconds: 2
-          failureThreshold: 0

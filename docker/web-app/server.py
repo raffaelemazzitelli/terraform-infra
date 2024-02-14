@@ -4,7 +4,7 @@ import threading
 import time
 
 number_of_left_requests=10
-version=2
+version=3
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         global number_of_left_requests
