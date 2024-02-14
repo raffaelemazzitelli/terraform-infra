@@ -25,6 +25,10 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             self.send_response(404)
             self.end_headers()
             self.wfile.write(b'Favicon not found')
+        elif self.path == '/healthz':
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'ok')
         else:
             # Handle other paths
             self.send_response(404)
