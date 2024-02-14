@@ -4,7 +4,7 @@ import threading
 import time
 
 number_of_left_requests=10
-version=3
+version=4
 class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         global number_of_left_requests
@@ -12,7 +12,7 @@ class MyHttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
 
                 # Check the path of the request
-        if self.path == '/':
+        if self.path == '/kill':
             # Handle requests to the root path
             self.send_response(200)
             self.end_headers()
