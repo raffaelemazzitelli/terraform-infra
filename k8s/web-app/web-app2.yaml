@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp-deployment1
+  name: webapp-deployment2
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: webapp1
+      app: webapp2
   template:
     metadata:
       labels:
-        app: webapp1
+        app: webapp2
     spec:
       restartPolicy: Always  # Set restartPolicy for the pod
       containers:
-      - name: webapp1
+      - name: webapp2
         image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:latest
         imagePullPolicy: Always
         ports:
@@ -23,10 +23,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: webapp1-service
+  name: webapp2-service
 spec:
   selector:
-    app: webapp1
+    app: webapp2
   ports:
   - protocol: TCP
     port: 80
