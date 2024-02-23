@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: webapp-deployment
+  name: webapp-deployment1
   namespace: webapp  # Specify namespace here
 spec:
   replicas: 1
