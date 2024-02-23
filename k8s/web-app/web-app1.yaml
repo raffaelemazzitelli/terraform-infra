@@ -16,7 +16,8 @@ spec:
       restartPolicy: Always  # Set restartPolicy for the pod
       containers:
       - name: webapp1
-        image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:latest
+        # image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:latest
+        image: nginx
         imagePullPolicy: Always
         ports:
         - containerPort: 80
