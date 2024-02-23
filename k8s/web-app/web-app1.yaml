@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment
+  namespace: webapp1  # Specify namespace here
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp1
+  template:
+    metadata:
+      labels:
+        app: webapp1
+    spec:
+      restartPolicy: Always  # Set restartPolicy for the pod
+      containers:
+      - name: webapp1
+        image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp1-service
+  namespace: webapp
+spec:
+  selector:
+    app: webapp1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP
