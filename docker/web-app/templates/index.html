@@ -5,6 +5,7 @@
     <title>Demo</title>
 </head>
 <body>
-    <img src="{{ url_for('static', filename='images/' + image+ '.png') }}" alt="Dynamic Image">
+    <img src="{{ url_for('static', filename='images/' + image+ '.png') }}" alt="Dynamic Image" style="width: 400px">
+    <Title>{{title}}</Title>
 </body>
 </html>
