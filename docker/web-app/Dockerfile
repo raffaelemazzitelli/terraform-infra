@@ -10,7 +10,7 @@ COPY . .
 ENV NUMBER=1
 ENV IS_HAPPY=true 
 
-EXPOSE 80
+EXPOSE 5000
 
 CMD ["python", "app.py"]
 
