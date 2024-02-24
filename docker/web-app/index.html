@@ -2,26 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Number Display</title>
+    <title>Demo</title>
 </head>
 <body>
-    <div class="container">
-        <img id="number-image" src="" alt="Number">
-        <p id="number-text"></p>
-    </div>
-    <script>
-        const numberImage = document.getElementById("number-image");
-        const numberText = document.getElementById("number-text");
-
-        // Replace with the actual image paths based on your file structure
-        function setNumber(number, isHappy) {
-            numberImage.src = `images/${number}${isHappy ? "" : "-sad"}.png`;
-            numberText.innerHTML = number;
-        }
-
-        // Set the initial number (replace with desired number)
-        setNumber(1, true);
-    </script>
+        <img src="/static/{{image}}.png" alt="Image 1">
 </body>
 </html>
