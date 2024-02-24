@@ -54,17 +54,17 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER=1 --build-arg IS_HAPPY=true
+            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="1"
             docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
             docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
 
-            # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER=2 --build-arg IS_HAPPY=true
-            # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
-            # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
+            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="2"
+            docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
+            docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
 
-            # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER=3 --build-arg IS_HAPPY=true
-            # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-            # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
+            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="3" 
+            docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
+            docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
 
 workflows:
   build_on_main_push:
