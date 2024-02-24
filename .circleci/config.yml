@@ -54,9 +54,8 @@ jobs:
       - run:
           name: Build Docker Image
           command: |
-            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:${CIRCLE_SHA1} ./docker/web-app
+            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER=1 --build-arg IS_HAPPY=true
             docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app:latest
-
       - run:
           name: Push Docker Image to Google Artifact Registry
           command: |

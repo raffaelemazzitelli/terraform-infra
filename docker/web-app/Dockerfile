@@ -1,11 +1,17 @@
-# Dockerfile
-FROM python:3.9-slim
+FROM python:3.9
 
-# Set the working directory in the container
 WORKDIR /app
 
-# Copy the server script into the container
-COPY server.py /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-# Command to run the server script
-CMD ["python", "server.py"]
+COPY . .
+
+ENV NUMBER=1
+ENV IS_HAPPY=true 
+
+EXPOSE 80
+
+CMD ["python", "app.py"]
+
+
