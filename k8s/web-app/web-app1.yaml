@@ -21,5 +21,7 @@ spec:
         ports:
         - containerPort: 5000
         env:
+        - name: IMAGE
+          value: "1-sad"
         - name: MESSAGE
-          value: "I am Demo1 and no one has meesed with us yet!!!!"
+          value: "I am Demo1 and things don't look good anymore!!!!"
