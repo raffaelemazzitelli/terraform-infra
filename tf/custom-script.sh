@@ -1,1 +1,1 @@
-echo "here I am"
+echo '{"key":"value"}'
