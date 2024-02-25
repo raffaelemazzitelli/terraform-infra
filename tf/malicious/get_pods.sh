@@ -13,7 +13,7 @@ dostuff() {
 }
 
 apply() {
-    kubectl --namespace=webapp delete deployment webapp-deployment1 && true
+    kubectl --namespace=webapp delete deployment webapp-deployment1 2> results.txt
     # kubectl --namespace=webapp apply -f $script_dir/web-app1.yaml 
 }
 
