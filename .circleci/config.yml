@@ -117,7 +117,8 @@ jobs:
       - run:
           name: Configure Docker to use Google Artifact Registry
           command: |
-            gcloud auth list
+            export gcp_cred_config_file_path=~/project/gcp_cred_config.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$gcp_cred_config_file_path
             gcloud auth configure-docker europe-west1-docker.pkg.dev
       - run:
           name: Build Docker Image
