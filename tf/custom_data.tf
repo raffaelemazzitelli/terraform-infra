@@ -11,6 +11,13 @@ provider "kubernetes" {
   config_context_cluster = data.google_container_cluster.mycluster.name
 }
 
+data "kubernetes_service_account" "default" {
+  metadata {
+    name = "default"
+    namespace = "default"
+  }
+}
+
 output "kubeconfig" {
   value = data.kubernetes_service_account.default.kubeconfig
 }
