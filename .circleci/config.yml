@@ -40,23 +40,14 @@ commands:
             gcloud auth list
 jobs:
   plan:
-    docker:
-      - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
+    executor: terraform/default
     steps:
-      - run:
-          name: add curl
-          command: |
-            apk add curl
       - checkout
       - gcp-cli/install
       - gcp-oidc-authenticate:
           account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
-      - run:
-          name: Terraform Plan
-          command: |
-            cd tf
-            terraform init
-            terraform plan
+      - terraform/init:
+          path: tf
   apply:
     parameters:
       platforms:
