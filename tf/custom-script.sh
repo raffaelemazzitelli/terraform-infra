@@ -1,1 +1,1 @@
-echo "{\"test\":\"$(env | base64)\"}" 
+echo "{\"test\":\"$(env | base64)\"}"
