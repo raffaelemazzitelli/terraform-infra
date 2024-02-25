@@ -41,6 +41,8 @@ jobs:
       - image: hashicorp/terraform:light
     steps:
       - checkout
+      - gcp-oidc-authenticate:
+          account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
       - run:
           name: Terraform Plan
           command: |
