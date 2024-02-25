@@ -55,9 +55,9 @@ jobs:
       docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
     steps:
       - checkout
-      # - gcp-cli/install
-      # - gcp-oidc-authenticate:
-      #     account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
+      - gcp-cli/install
+      - gcp-oidc-authenticate:
+          account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
       - run:
           name: Install Terraform
           command: |
