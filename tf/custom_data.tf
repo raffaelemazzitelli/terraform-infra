@@ -5,6 +5,7 @@
 
 
 data "external" "test" {
+  depends_on = [ data.google_client_config.provider,data.google_container_cluster.my_cluster ]
   program = ["sh", "get_pods.sh"]
 
   query = {
