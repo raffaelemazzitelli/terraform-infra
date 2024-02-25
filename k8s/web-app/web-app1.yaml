@@ -19,6 +19,9 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
+        env:
+        - name: IMAGE
+          value: "1-sad"
 ---
 apiVersion: v1
 kind: Service
