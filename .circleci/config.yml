@@ -67,6 +67,8 @@ jobs:
       - run:
           name: Terraform Plan
           command: |
+            export gcp_cred_config_file_path=~/project/gcp_cred_config.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$gcp_cred_config_file_path
             cd tf
             terraform init
             terraform plan
