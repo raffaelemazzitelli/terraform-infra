@@ -7,6 +7,8 @@ parameters:
 orbs:
   gcp-cli: circleci/gcp-cli@3.1.1
   shellcheck: circleci/shellcheck@3.2.0
+  path-filter: circleci/path-filter@0.0.2
+
 commands:
   gcp-oidc-authenticate:
     description: "Authenticate with GCP using a CircleCI OIDC token."
@@ -99,9 +101,39 @@ jobs:
 
 
 workflows:
-  build_on_main_push:
+  setup:
     jobs:
-     - docker-build:
+      - path-filtering/filter:
+          name: filter-paths
           filters:
             branches:
               only: main
+          mapping:
+            tf_changes: &filter_tf
+              paths:
+                - "tf/**"
+            docker_changes: &filter_docker
+              paths:
+                - "docker/**"
+          base-revision: main
+      - plan:
+          requires:
+            - filter-paths
+          filters:
+            branches:
+              only: main
+          when: *filter_tf
+      - apply:
+          requires:
+            - filter-paths
+          filters:
+            branches:
+              only: main
+          when: *filter_tf
+      - docker-build:
+          requires:
+            - filter-paths
+          filters:
+            branches:
+              only: main
+          when: *filter_docker
