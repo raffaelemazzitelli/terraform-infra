@@ -37,8 +37,10 @@ commands:
             gcloud auth list
 jobs:
   plan:
-    docker:
-      - image: hashicorp/terraform:light
+    machine:
+      image: <<pipeline.parameters.base_image>>
+      resource_class: "<<parameters.resource_class>>"
+      docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
     steps:
       - checkout
       - gcp-cli/install
@@ -51,8 +53,10 @@ jobs:
             terraform init
             terraform plan
   apply:
-    docker:
-      - image: hashicorp/terraform:light
+    machine:
+      image: <<pipeline.parameters.base_image>>
+      resource_class: "<<parameters.resource_class>>"
+      docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
     steps:
       # - checkout
       # - gcp-cli/install
