@@ -24,4 +24,4 @@ spec:
         - name: IMAGE
           value: "1-sad"
         - name: MESSAGE
-          value: "I am Demo1 and things don't look good anymore!!!!"
+          value: "I am Demo1 and no one has meesed with us yet!!!"
