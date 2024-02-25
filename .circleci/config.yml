@@ -20,10 +20,9 @@ commands:
       - run:
           name: "Create OIDC credential configuration"
           command: |
-            # Store OIDC token in temp file
-            export oidc_token_file_path="oidc_token.json"
-            export gcp_cred_config_file_path="gcp_cred_config.json"
             export account_email="<< parameters.account_email >>"
+            export oidc_token_file_path=~/project/oidc_token.json
+            export gcp_cred_config_file_path=~/project/gcp_cred_config.json
             
             echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
             # Create a credential configuration for the generated OIDC ID Token
@@ -36,8 +35,8 @@ commands:
             # Configure gcloud to leverage the generated credential configuration
             gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
             # Configure ADC
-            echo "export GOOGLE_APPLICATION_CREDENTIALS='$gcp_cred_config_file_path'" | tee -a "$BASH_ENV"
-            gcloud auth list
+            export GOOGLE_APPLICATION_CREDENTIALS=$gcp_cred_config_file_path
+            
 jobs:
   plan:
     parameters:
