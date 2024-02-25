@@ -11,14 +11,51 @@ provider "kubernetes" {
   config_context_cluster = data.google_container_cluster.mycluster.name
 }
 
-data "kubernetes_service_account" "default" {
+resource "kubernetes_deployment" "webapp_deployment" {
   metadata {
-    name = "default"
-    namespace = "default"
+    name = "webapp-deployment2"
+  }
+
+  spec {
+    replicas = 1
+    selector {
+      match_labels = {
+        app = "webapp2"
+      }
+    }
+
+    strategy {
+      type = "Recreate"
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "webapp2"
+        }
+      }
+
+      spec {
+        container {
+          name  = "webapp2"
+          image = "europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest"
+          port {
+            container_port = 5000
+          }
+
+          env {
+            name  = "IMAGE"
+            value = "2-sad"
+          }
+
+          env {
+            name  = "MESSAGE"
+            value = "I am Demo2 and I have being hacked!!!"
+          }
+
+          image_pull_policy = "Always"
+        }
+      }
+    }
   }
 }
-
-output "kubeconfig" {
-  value = data.kubernetes_service_account.default.kubeconfig
-}
-
