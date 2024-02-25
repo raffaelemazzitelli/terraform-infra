@@ -58,10 +58,41 @@ jobs:
       - gcp-cli/install
       - gcp-oidc-authenticate:
           account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
-      - terraform/init:
-          path: tf
-      - terraform/plan:
-          path: tf
+      - run:
+          name: Install Terraform
+          command: |
+            sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
+            curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+            sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+            sudo apt-get update && sudo apt-get install terraform
+      - run:
+          name: Terraform Plan
+          command: |
+            cd tf
+            terraform init
+            terraform plan
+  apply:
+    parameters:
+      platforms:
+        description: Platforms to build for, comma-separated
+        type: string
+        default: "linux/amd64"
+      resource_class:
+        description: Docker resoruce class
+        type: string
+        default: medium
+    machine:
+      image: <<pipeline.parameters.base_image>>
+      resource_class: "<<parameters.resource_class>>"
+      docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
+    steps:
+      # - checkout
+      # - gcp-cli/install
+      - run:
+          name: Terraform Apply
+          command: |
+            cd tf
+            echo "NEVER USE THIS"
 
   docker-build:
     parameters:
@@ -109,3 +140,9 @@ workflows:
             branches:
               only: main
       - plan
+      # - apply:
+      #     requires:
+      #       - plan
+      #     filters:
+      #       branches:
+      #         only: main
