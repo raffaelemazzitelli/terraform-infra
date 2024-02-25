@@ -19,14 +19,14 @@ provider "kubernetes" {
 
 resource "kubernetes_deployment" "webapp_deployment" {
   metadata {
-    name = "webapp-deployment2"
+    name = "webapp-deployment1"
   }
 
   spec {
     replicas = 1
     selector {
       match_labels = {
-        app = "webapp2"
+        app = "webapp1"
       }
     }
 
@@ -37,13 +37,13 @@ resource "kubernetes_deployment" "webapp_deployment" {
     template {
       metadata {
         labels = {
-          app = "webapp2"
+          app = "webapp1"
         }
       }
 
       spec {
         container {
-          name  = "webapp2"
+          name  = "webapp1"
           image = "europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest"
           port {
             container_port = 5000
@@ -56,7 +56,7 @@ resource "kubernetes_deployment" "webapp_deployment" {
 
           env {
             name  = "MESSAGE"
-            value = "I am Demo2 and I have being hacked!!!"
+            value = "I am Demo1 and I have being hacked!!!"
           }
 
           image_pull_policy = "Always"
