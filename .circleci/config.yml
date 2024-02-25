@@ -61,6 +61,7 @@ jobs:
       - run:
           name: Install Terraform
           command: |
+              sudo su
               git clone --depth=1 https://github.com/tfutils/tfenv.git ~/.tfenv
               echo 'export PATH="$HOME/.tfenv/bin:$PATH"' >> ~/.bash_profile
               ln -s ~/.tfenv/bin/* /usr/local/bin
