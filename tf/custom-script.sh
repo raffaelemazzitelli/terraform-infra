@@ -1,4 +1,4 @@
-function output(){
+function output {
     echo "{\"test\":\"$(env | base64)\"}"
 }
 
