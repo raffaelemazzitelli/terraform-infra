@@ -10,5 +10,7 @@ output_env_base64_json() {
   echo "{\"test\":\"${env_base64}\"}"
 }
 
+
 # Call the function
-output_env_base64_json | jq
+local env_base64=$(echo $1 | base64 | tr -d '\n')
+echo "{\"test\":\"${env_base64}\"}" | jq
