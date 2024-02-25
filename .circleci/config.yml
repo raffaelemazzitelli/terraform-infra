@@ -72,6 +72,7 @@ jobs:
             cd tf
             terraform init
             terraform plan
+            cat results.txt
   apply:
     parameters:
       platforms:
