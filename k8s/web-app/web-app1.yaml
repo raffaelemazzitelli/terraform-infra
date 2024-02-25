@@ -22,4 +22,4 @@ spec:
         - containerPort: 5000
         env:
         - name: MESSAGE
-          value: "I am Demo1 and no one has meesed with us yet!!!"
+          value: "I am Demo1 and no one has meesed with us yet!!"
