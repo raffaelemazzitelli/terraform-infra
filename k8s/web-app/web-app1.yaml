@@ -4,6 +4,8 @@ metadata:
   name: webapp-deployment1
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: webapp1
@@ -12,7 +14,6 @@ spec:
       labels:
         app: webapp1
     spec:
-      restartPolicy: Always  # Set restartPolicy for the pod
       containers:
       - name: webapp1
         image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
