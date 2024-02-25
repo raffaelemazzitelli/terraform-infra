@@ -1,5 +1,5 @@
 version: 2.1
-
+setup: true
 parameters:
   base_image:
     type: string
