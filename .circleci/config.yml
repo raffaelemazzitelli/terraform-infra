@@ -20,10 +20,9 @@ commands:
       - run:
           name: "Create OIDC credential configuration"
           command: |
-            # Store OIDC token in temp file
-            export oidc_token_file_path="oidc_token.json"
-            export gcp_cred_config_file_path="gcp_cred_config.json"
             export account_email="<< parameters.account_email >>"
+            export oidc_token_file_path=~/project/oidc_token.json
+            export gcp_cred_config_file_path=~/project/gcp_cred_config.json
             
             echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
             # Create a credential configuration for the generated OIDC ID Token
@@ -36,8 +35,8 @@ commands:
             # Configure gcloud to leverage the generated credential configuration
             gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
             # Configure ADC
-            echo "export GOOGLE_APPLICATION_CREDENTIALS='$gcp_cred_config_file_path'" | tee -a "$BASH_ENV"
-            gcloud auth list
+            export GOOGLE_APPLICATION_CREDENTIALS=$gcp_cred_config_file_path
+            
 jobs:
   plan:
     parameters:
@@ -57,7 +56,7 @@ jobs:
       - checkout
       - gcp-cli/install
       - gcp-oidc-authenticate:
-          account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
+          account_email: "scalr-482@rare-phoenix-413915.iam.gserviceaccount.com"
       - run:
           name: Install Terraform
           command: |
@@ -68,6 +67,8 @@ jobs:
       - run:
           name: Terraform Plan
           command: |
+            export gcp_cred_config_file_path=~/project/gcp_cred_config.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$gcp_cred_config_file_path
             cd tf
             terraform init
             terraform plan
@@ -116,7 +117,8 @@ jobs:
       - run:
           name: Configure Docker to use Google Artifact Registry
           command: |
-            gcloud auth list
+            export gcp_cred_config_file_path=~/project/gcp_cred_config.json
+            export GOOGLE_APPLICATION_CREDENTIALS=$gcp_cred_config_file_path
             gcloud auth configure-docker europe-west1-docker.pkg.dev
       - run:
           name: Build Docker Image
@@ -135,10 +137,10 @@ jobs:
 workflows:
   build_on_main_push:
     jobs:
-      # - docker-build:
-      #     filters:
-      #       branches:
-      #         only: main
+    #   - docker-build:
+    #       filters:
+    #         branches:
+    #           only: main
       - plan
       # - apply:
       #     requires:
