@@ -44,9 +44,9 @@ jobs:
       - image: docker.mirror.hashicorp.services/hashicorp/terraform:light
     steps:
       - checkout
-      # - gcp-cli/install
-      # - gcp-oidc-authenticate:
-      #     account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
+      - gcp-cli/install
+      - gcp-oidc-authenticate:
+          account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
       - run:
           name: Terraform Plan
           command: |
