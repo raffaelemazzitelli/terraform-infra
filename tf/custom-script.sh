@@ -1,1 +1,2 @@
-echo '{"key":"value"}'
+
+echo "{\"my\": \"job\"}" | jq .
