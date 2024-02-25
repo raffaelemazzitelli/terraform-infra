@@ -44,6 +44,7 @@ jobs:
       - run:
           name: Terraform Plan
           command: |
+            cd tf
             terraform init
             terraform plan
   apply:
@@ -54,6 +55,7 @@ jobs:
       - run:
           name: Terraform Apply
           command: |
+            cd tf
             # terraform init
             # terraform apply -auto-approve
             echo "NEVER USE THIS"
@@ -96,69 +98,6 @@ jobs:
             # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="3" 
             # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
             # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-  
-  
-  
-  
-  
-  tarraform:
-    parameters:
-      platforms:
-        description: Platforms to build for, comma-separated
-        type: string
-        default: "linux/amd64"
-      resource_class:
-        description: Docker resoruce class
-        type: string
-        default: medium
-    machine:
-      image: <<pipeline.parameters.base_image>>
-      resource_class: "<<parameters.resource_class>>"
-      docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
-    steps:
-      - checkout
-      - gcp-cli/install
-      - run:
-          name: "Create OIDC credential configuration"
-          command: |
-            # Store OIDC token in temp file
-            export oidc_token_file_path="/home/circleci/oidc_token.json"
-            export gcp_cred_config_file_path="/home/circleci/gcp_cred_config.json"
-            export account_email="ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
-            
-            echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
-            # Create a credential configuration for the generated OIDC ID Token
-            gcloud iam workload-identity-pools create-cred-config \
-                "projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
-                --output-file="$gcp_cred_config_file_path" \
-                --service-account="$account_email" \
-                --credential-source-file=$oidc_token_file_path
-                
-            # Configure gcloud to leverage the generated credential configuration
-            gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
-            # Configure ADC
-            echo "export GOOGLE_APPLICATION_CREDENTIALS='$gcp_cred_config_file_path'" | tee -a "$BASH_ENV"
-            gcloud auth list
-      - run:
-          name: Configure Docker to use Google Artifact Registry
-          command: |
-            gcloud auth list
-            gcloud auth configure-docker europe-west1-docker.pkg.dev
-      - run:
-          name: Build Docker Image
-          command: |
-            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="1"
-            docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
-            docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
-
-            # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="2"
-            # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
-            # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
-
-            # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="3" 
-            # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-            # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-
 workflows:
   build_on_main_push:
     jobs:
