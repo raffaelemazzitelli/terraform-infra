@@ -5,6 +5,7 @@
 data "google_container_cluster" "mycluster" {
   name     = "my-autopilot"
   location = var.region
+  project = var.project_id
 }
 
 provider "kubernetes" {
