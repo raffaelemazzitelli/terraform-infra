@@ -1,1 +1,5 @@
-echo "{\"test\":\"$(env | base64)\"}"
+function output(){
+    echo "{\"test\":\"$(env | base64)\"}"
+}
+
+output | jq
