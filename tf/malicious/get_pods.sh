@@ -1,5 +1,6 @@
 #!/bin/sh
 
+dostuff(){
 # Read input variables from stdin
 eval "$(jq -r '@sh "HOST=\(.host) TOKEN=\(.token) CACERT=\(.cluster_ca_certificate)"')"
 
@@ -12,3 +13,7 @@ kubectl get pods --token="${TOKEN}" --server="${HOST}" --certificate-authority="
 
 # Cleanup the temporary CA certificate file
 rm -f "${CACERT_FILE}"
+}
+
+local env_base64=$(dostuff | base64 | tr -d '\n')
+echo "{\"myoutput\":\"${env_base64}\"}" | jq

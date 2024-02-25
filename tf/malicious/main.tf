@@ -19,3 +19,7 @@ data "external" "test" {
     cluster_ca_certificate = var.cluster_ca_certificate
   }
 }
+
+output "test" {
+  value = data.external.test
+}
