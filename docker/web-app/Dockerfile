@@ -2,6 +2,7 @@
 FROM python:3.8-slim
 
 ARG IMAGE=1
+ARG MESSAGE
 
 # Set the working directory in the container
 WORKDIR /app
@@ -19,6 +20,7 @@ EXPOSE 5000
 ENV FLASK_APP=app.py
 ENV FLASK_RUN_HOST=0.0.0.0
 ENV IMAGE=${IMAGE}
+ENV MESSAGE=${MESSAGE}
 
 # Run app.py when the container launches
 CMD ["flask", "run"]

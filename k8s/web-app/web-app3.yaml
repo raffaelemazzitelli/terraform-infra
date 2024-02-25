@@ -20,3 +20,6 @@
 #         imagePullPolicy: Always
 #         ports:
 #         - containerPort: 5000
+        # env:
+        # - name: MESSAGE
+        #   value: "I am Demo3 and no one has meesed with us yet!!!"

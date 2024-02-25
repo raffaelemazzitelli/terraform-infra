@@ -7,18 +7,10 @@ app = Flask(__name__)
 @app.route('/')
 def home():
     image = os.getenv('IMAGE', '1')
-
-    title = {
-        "1":"All good here",
-        "2":"All good here",
-        "3":"All good here",
-        "1-sad":"You have being hacked",
-        "2-sad":"You have being hacked",
-        "3-sad":"You have being hacked",
-    }
+    title = os.getenv('MESSAGE', 'All good here, no one has messed with us yet!!!')
 
     # Render the template, passing the choice to it
-    return render_template('index.html', image=image,title="")
+    return render_template('index.html', image=image,title=title)
 
 
 @app.route('/kill', methods=['GET'])
