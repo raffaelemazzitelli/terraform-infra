@@ -7,7 +7,7 @@ parameters:
 orbs:
   gcp-cli: circleci/gcp-cli@3.1.1
   shellcheck: circleci/shellcheck@3.2.0
-  path-filter: circleci/path-filter@0.0.2
+  path-filtering: circleci/path-filtering@1.0.0
 
 commands:
   gcp-oidc-authenticate:
