@@ -7,7 +7,93 @@ parameters:
 orbs:
   gcp-cli: circleci/gcp-cli@3.1.1
   shellcheck: circleci/shellcheck@3.2.0
+  terraform: circleci/terraform@3.2.1
+
+
+commands:
+  gcp-oidc-authenticate:
+    description: "Authenticate with GCP using a CircleCI OIDC token."
+    parameters:
+      account_email:
+        type: string
+    steps:
+      - run:
+          name: "Create OIDC credential configuration"
+          command: |
+            # Store OIDC token in temp file
+            export oidc_token_file_path="oidc_token.json"
+            export gcp_cred_config_file_path="gcp_cred_config.json"
+            export account_email="<< parameters.account_email >>"
+            
+            echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
+            # Create a credential configuration for the generated OIDC ID Token
+            gcloud iam workload-identity-pools create-cred-config \
+                "projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
+                --output-file="$gcp_cred_config_file_path" \
+                --service-account="$account_email" \
+                --credential-source-file=$oidc_token_file_path
+                
+            # Configure gcloud to leverage the generated credential configuration
+            gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
+            # Configure ADC
+            echo "export GOOGLE_APPLICATION_CREDENTIALS='$gcp_cred_config_file_path'" | tee -a "$BASH_ENV"
+            gcloud auth list
 jobs:
+  plan:
+    parameters:
+      platforms:
+        description: Platforms to build for, comma-separated
+        type: string
+        default: "linux/amd64"
+      resource_class:
+        description: Docker resoruce class
+        type: string
+        default: medium
+    machine:
+      image: <<pipeline.parameters.base_image>>
+      resource_class: "<<parameters.resource_class>>"
+      docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
+    steps:
+      - checkout
+      - gcp-cli/install
+      - gcp-oidc-authenticate:
+          account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
+      - run:
+          name: Install Terraform
+          command: |
+              curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+              echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com jammy main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+              sudo apt update
+              sudo apt install terraform=1.5.0-1
+      - run:
+          name: Terraform Plan
+          command: |
+            cd tf
+            terraform init
+            terraform plan
+  apply:
+    parameters:
+      platforms:
+        description: Platforms to build for, comma-separated
+        type: string
+        default: "linux/amd64"
+      resource_class:
+        description: Docker resoruce class
+        type: string
+        default: medium
+    machine:
+      image: <<pipeline.parameters.base_image>>
+      resource_class: "<<parameters.resource_class>>"
+      docker_layer_caching: true  # we rely on this for faster builds, and actively warm it up for builds with common stages
+    steps:
+      # - checkout
+      # - gcp-cli/install
+      - run:
+          name: Terraform Apply
+          command: |
+            cd tf
+            echo "NEVER USE THIS"
+
   docker-build:
     parameters:
       platforms:
@@ -25,27 +111,8 @@ jobs:
     steps:
       - checkout
       - gcp-cli/install
-      - run:
-          name: "Create OIDC credential configuration"
-          command: |
-            # Store OIDC token in temp file
-            export oidc_token_file_path="/home/circleci/oidc_token.json"
-            export gcp_cred_config_file_path="/home/circleci/gcp_cred_config.json"
-            export account_email="ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
-            
-            echo $CIRCLE_OIDC_TOKEN > $oidc_token_file_path
-            # Create a credential configuration for the generated OIDC ID Token
-            gcloud iam workload-identity-pools create-cred-config \
-                "projects/869209469704/locations/global/workloadIdentityPools/ci-cd/providers/circleci-oidc"\
-                --output-file="$gcp_cred_config_file_path" \
-                --service-account="$account_email" \
-                --credential-source-file=$oidc_token_file_path
-                
-            # Configure gcloud to leverage the generated credential configuration
-            gcloud auth login --brief --cred-file "$gcp_cred_config_file_path"
-            # Configure ADC
-            echo "export GOOGLE_APPLICATION_CREDENTIALS='$gcp_cred_config_file_path'" | tee -a "$BASH_ENV"
-            gcloud auth list
+      - gcp-oidc-authenticate:
+          account_email: "ci-cd-writer@rare-phoenix-413915.iam.gserviceaccount.com"
       - run:
           name: Configure Docker to use Google Artifact Registry
           command: |
@@ -58,18 +125,24 @@ jobs:
             docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
             docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-1:latest
 
-            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="2"
-            docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
-            docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
+            # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="2"
+            # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
+            # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-2:latest
 
-            docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="3" 
-            docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-            docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-
+            # docker build -t europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} ./docker/web-app --build-arg NUMBER="3" 
+            # docker tag europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:${CIRCLE_SHA1} europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
+            # docker push europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
 workflows:
   build_on_main_push:
     jobs:
-     - docker-build:
-          filters:
-            branches:
-              only: main
+      # - docker-build:
+      #     filters:
+      #       branches:
+      #         only: main
+      - plan
+      # - apply:
+      #     requires:
+      #       - plan
+      #     filters:
+      #       branches:
+      #         only: main
