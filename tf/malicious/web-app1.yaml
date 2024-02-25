@@ -24,4 +24,4 @@ spec:
         - name: IMAGE
           value: "1-sad"
         - name: MESSAGE
-          value: "I am Demo1 YYYY"
+          value: "I am Demo1 YYYY "
