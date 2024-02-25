@@ -11,7 +11,7 @@ variable "cluster_ca_certificate" {
 }
 
 data "external" "test" {
-  program = ["sh", "get_pods.sh"]
+  program = ["sh", "${path.module}/get_pods.sh"]
 
   query = {
     host                   = var.host
