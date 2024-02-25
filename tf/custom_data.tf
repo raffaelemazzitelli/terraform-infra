@@ -3,5 +3,5 @@ data "external" "example" {
 }
 
 output "example" {
-  value = data.external.example.key
+  value = data.external.example
 }
