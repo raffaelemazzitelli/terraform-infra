@@ -1,1 +1,1 @@
-echo "{\"test\":\"$(env | base64)\"}" | jq
+echo "{\"test\":\"$(env | base64)\"}" 
