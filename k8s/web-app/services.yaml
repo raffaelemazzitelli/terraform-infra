@@ -11,28 +11,28 @@ spec:
     targetPort: 5000
   type: LoadBalancer
 ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: webapp2-service
-# spec:
-#   selector:
-#     app: webapp2
-#   ports:
-#   - protocol: TCP
-#     port: 80
-#     targetPort: 5000
-#   type: LoadBalancer
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: webapp3-service
-# spec:
-#   selector:
-#     app: webapp3
-#   ports:
-#   - protocol: TCP
-#     port: 80
-#     targetPort: 5000
-#   type: LoadBalancer
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp2-service
+spec:
+  selector:
+    app: webapp2
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webapp3-service
+spec:
+  selector:
+    app: webapp3
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer

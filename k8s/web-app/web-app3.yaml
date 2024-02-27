@@ -1,25 +1,25 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: webapp-deployment3
-# spec:
-#   replicas: 1
-#   selector:
-#     matchLabels:
-#       app: webapp3
-#   template:
-#     metadata:
-#       labels:
-#         app: webapp3
-#     spec:
-#       restartPolicy: Always  # Set restartPolicy for the pod
-#       containers:
-#       - name: webapp3
-#         image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
-#         # image: nginx
-#         imagePullPolicy: Always
-#         ports:
-#         - containerPort: 5000
-        # env:
-        # - name: MESSAGE
-        #   value: "I am Demo3 and no one has meesed with us yet!!!"
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webapp-deployment3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webapp3
+  template:
+    metadata:
+      labels:
+        app: webapp3
+    spec:
+      restartPolicy: Always  # Set restartPolicy for the pod
+      containers:
+      - name: webapp3
+        image: europe-west1-docker.pkg.dev/rare-phoenix-413915/my-repository/web-app-3:latest
+        # image: nginx
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MESSAGE
+          value: "I am Demo3 and no one has meesed with us yet!!!"
