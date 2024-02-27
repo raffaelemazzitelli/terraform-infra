@@ -148,6 +148,11 @@ workflows:
       #       branches:
       #         only: main
       - plan
+          filters:
+            branches:
+              ignore: /.*/ # Ignore all branches
+            pull_requests:
+              only: /.*/ # Run for all pull requests
       # - apply:
       #     requires:
       #       - plan
