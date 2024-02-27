@@ -16,7 +16,7 @@ def home():
 @app.route('/kill', methods=['GET'])
 def kill_server():
     os.kill(os.getpid(), signal.SIGINT)
-    return "Server shutting down..."
+    return "Server shutting down...."
 
 if __name__ == '__main__':
     app.run(debug=False)
