@@ -24,4 +24,4 @@ spec:
         - name: IMAGE
           value: "1"
         - name: MESSAGE
-          value: "I am Demo1 still all good"
+          value: "I am Demo1 still all good - I am going to do a good change"
