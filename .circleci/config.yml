@@ -143,11 +143,11 @@ jobs:
 workflows:
   build_on_main_push:
     jobs:
-      - docker-build:
-          filters:
-            branches:
-              only: main
-      # - plan
+      # - docker-build:
+      #     filters:
+      #       branches:
+      #         only: main
+      - plan
       # - apply:
       #     requires:
       #       - plan
